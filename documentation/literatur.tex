@@ -1,0 +1,30 @@
+%% Ein kleiner Abstand zu den Kapiteln im Inhaltsverzeichnis (toc)
+\addtocontents{toc}{\protect\vspace*{\baselineskip}}
+
+%% Literaturverzeichnis
+%% ==> Eine Datei 'literatur.bib' wird hierfür benötigt.
+%% ==> Sie müssen hierfür BibTeX verwenden (Projekt | Eigenschaften... | BibTeX)
+
+\addcontentsline{toc}{chapter}{Literaturverzeichnis}
+\nocite{*} %Auch nicht-zitierte BibTeX-Einträge werden angezeigt.
+\bibliographystyle{alpha} %Art der Ausgabe: plain / apalike / amsalpha / ...
+\bibliography{literatur} %Eine Datei 'literatur.bib' wird hierfür benötigt.
+
+%% Abbildungsverzeichnis
+\clearpage
+\addcontentsline{toc}{chapter}{Abbildungsverzeichnis}
+\listoffigures
+
+%% Tabellenverzeichnis
+\clearpage
+\addcontentsline{toc}{chapter}{Tabellenverzeichnis}
+\listoftables
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% ANHÄNGE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\appendix
+%% ==> Schreiben Sie hier Ihren Text oder fügen Sie externe Dateien ein.
+
+%\input{Dateiname} %Eine Datei 'Dateiname.tex' wird hierfür benötigt.
