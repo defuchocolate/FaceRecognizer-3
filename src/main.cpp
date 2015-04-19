@@ -1,13 +1,18 @@
 #include <iostream>
 
+#include <signal.h>
+
 #include "opencv2/core/core.hpp"
 #include "opencv2/contrib/contrib.hpp"
 #include "opencv2/highgui/highgui.hpp"
+
+#include <GPIOTrigger.hpp>
 
 static bool keepGoing = true;
 
 void signalHandler(int signum)
 {
+	(void)signum;
 	keepGoing = false;
 }
 
@@ -15,22 +20,34 @@ int main(int argc, char** argv)
 {
 	(void)argc;
 	(void)argv;
+	signal(SIGINT, signalHandler);
+	signal(SIGTERM, signalHandler);
 	std::cout << "Matthias stinkt!" << std::endl;
 
 	// TODO:
-	Trigger trigger;
-	Camera camera;
-	Mailer mail;
+	GPIOTrigger trigger(1); // TODO: choose correct pin
+	//Camera camera;
+	//Mailer mail;
 
 	while(keepGoing)
 	{
-		trigger.wait();
-		FaceRecognizer fr(camera.makeSnapshots());
-		if (fr)
+		if (trigger.waitForMs(1000))
 		{
-			mail.send(fr.getName());
+			std::cout << "got trigger!" << std::endl;
 		}
+		else
+		{
+			std::cout << "trigger timeout..." << std::endl;
+		}
+		//FaceRecognizer fr(camera.makeSnapshots());
+		//if (fr)
+		//{
+		//	mail.send(fr.getName());
+		//}
+
+		std::cout << "going to next circuit..." << std::endl;
 	}
 
-	return 1;
+	std::cout << "exiting..." << std::endl;
+	return 0;
 }
