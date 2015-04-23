@@ -14,8 +14,8 @@ class Camera final : public ICaptureDevice
 {
 	bool mIsValid;
 	const unsigned int mDeviceNumber;
-	const CvCapture *mCamera;
-	
+	CvCapture *mCamera;
+
 	Camera(const Camera&) = delete;
 	const Camera& operator=(const Camera&) = delete;
 

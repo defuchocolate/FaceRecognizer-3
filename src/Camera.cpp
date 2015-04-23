@@ -13,10 +13,10 @@ Camera::Camera(unsigned int aDeviceNumber) :
 
 Camera::~Camera()
 {
-	cvReleaseCapture();
+	cvReleaseCapture(&mCamera);
 }
 
 cv::Mat Camera::snapshot()
 {
-    return cvQueryFrame(camera);
+    return cvQueryFrame(mCamera);
 }

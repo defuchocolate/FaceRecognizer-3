@@ -32,12 +32,12 @@ FaceRecognizer::operator bool() const
 
 bool FaceRecognizer::TrainImage(cv::Mat aImageMatrix, unsigned int aImageIdentifier)
 {
-	std::vector<cv::Mat> images(1);
+	/*std::vector<cv::Mat> images(1);
 	std::vector<int> labels(1);
 
 	images.push_back(cv::imdecode(aImageData, CV_LOAD_IMAGE_GRAYSCALE));
 	labels.push_back(aImageIdentifier);
 
-	mModel->train(images, labels);
+	mModel->train(images, labels);*/
 	return true;
 }
