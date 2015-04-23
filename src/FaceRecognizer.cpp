@@ -1,4 +1,5 @@
 #include <FaceRecognizer.hpp>
+#include <iostream>
 
 static int handleError(int, const char*, const char*, const char*, int, void*)
 {
@@ -30,14 +31,44 @@ FaceRecognizer::operator bool() const
 	return mIsValid;
 }
 
-bool FaceRecognizer::TrainImage(cv::Mat aImageMatrix, unsigned int aImageIdentifier)
+bool FaceRecognizer::TrainImage(std::vector<cv::Mat>& aImageMatrices, int aImageIdentifier)
 {
-	/*std::vector<cv::Mat> images(1);
-	std::vector<int> labels(1);
+	if (aImageIdentifier < 0)
+	{
+		return false;
+	}
 
-	images.push_back(cv::imdecode(aImageData, CV_LOAD_IMAGE_GRAYSCALE));
-	labels.push_back(aImageIdentifier);
+	std::vector<int> labels(aImageMatrices.size(), aImageIdentifier);
 
-	mModel->train(images, labels);*/
+	mModel->train(aImageMatrices, labels);
+
+	// save the updated model:
+	try
+	{
+		mModel->save(mEigenFaceMetaFile);
+	}
+	catch(cv::Exception& e)
+	{
+		return false;
+	}
+
 	return true;
 }
+
+int FaceRecognizer::FindIdentifierForFace(cv::Mat& aImage)
+{
+	int predictLabel = -1;
+	double confidence = 0.0;
+	mModel->predict(aImage, predictLabel, confidence);
+
+	if (predictLabel >= 0)
+	{
+		if (confidence > 0.5)
+		{
+			return predictLabel;
+		}
+	}
+	return -1;
+}
+
+

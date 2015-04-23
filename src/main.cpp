@@ -21,9 +21,10 @@ int main(int argc, char** argv)
 	signal(SIGTERM, signalHandler);
 
 	//Mailer mail;
-	FaceDetector faceDetector(); // detect and locate face in a picture
-	FaceRecognizer faceRecognizer("test123.yml");
-	if (faceDetector && faceRecognizer)
+	//FaceDetector faceDetector(); // detect and locate face in a picture
+	FaceRecognizer faceRecognizer("test123.xml");
+
+	if (/*faceDetector &&*/ faceRecognizer)
 	{
 		//Camera camera(faceDetector, faceRecognizer);
 		GPIOTrigger trigger(1); // TODO: choose correct pin

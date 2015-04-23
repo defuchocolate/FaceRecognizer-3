@@ -19,7 +19,8 @@ class FaceRecognizer
 
 		explicit operator bool() const;
 
-		bool TrainImage(cv::Mat aImageMatrix, unsigned int aImageIdentifier);
+		bool TrainImage(std::vector<cv::Mat>& aImageMatrices, int aImageIdentifier);
+		int FindIdentifierForFace(cv::Mat& aImage);
 };
 
 #endif
