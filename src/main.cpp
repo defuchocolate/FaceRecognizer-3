@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include <unistd.h>
 #include <signal.h>
 
 #include <FaceWrapper.hpp>
@@ -39,16 +40,18 @@ int main(int argc, char** argv)
 
 	if (faceWrapper)
 	{
-		GPIOTrigger trigger(1); // TODO: choose correct pin
+		//GPIOTrigger trigger(1); // TODO: choose correct pin
 
 		while(keepGoing)
 		{
-			if (trigger.waitForMs(1000))
+			/*if (trigger.waitForMs(1000))
 			{
 				std::cout << "got trigger!" << std::endl;
 
 				//faceWrapper.StartProcess();
-			}
+			}*/
+
+			sleep(10); // to be removed when trigger works
 		}
 	}
 	else
