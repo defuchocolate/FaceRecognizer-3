@@ -22,10 +22,10 @@ int main(int argc, char** argv)
 	{
 		std::cout << "usage: " << argv[0] << " </path/to/face_recognize_meta.xml> </path/to/haar_cascade> <face image width> <face image height> <device id>" << std::endl;
 		std::cout << "\t </path/to/face_recognize_meta.xml> -- Path to the XML with the face database." << std::endl;
-        std::cout << "\t </path/to/haar_cascade> -- Path to the Haar Cascade for face detection." << std::endl;
-        std::cout << "\t <face image width> -- The width of the trained face images." << std::endl;
-        std::cout << "\t <face image height> -- The height of the trained face images." << std::endl;
-        std::cout << "\t <device id> -- The webcam device id to grab frames from." << std::endl;
+		std::cout << "\t </path/to/haar_cascade> -- Path to the Haar Cascade for face detection." << std::endl;
+		std::cout << "\t <face image width> -- The width of the trained face images." << std::endl;
+		std::cout << "\t <face image height> -- The height of the trained face images." << std::endl;
+		std::cout << "\t <device id> -- The webcam device id to grab frames from." << std::endl;
 		return 1;
 	}
 
