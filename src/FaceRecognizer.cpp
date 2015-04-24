@@ -18,6 +18,7 @@ FaceRecognizer::FaceRecognizer(const std::string& aEigenFaceMetaFile) :
 	}
 	catch(cv::Exception& e)
 	{
+		std::cerr << "Instantiation of FaceRecognizer failed!" << std::endl;
 		mIsValid = false;
 	}
 }

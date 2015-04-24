@@ -1,9 +1,5 @@
-#ifndef CAMERA_H
-#define CAMERA_H
-
-#include "opencv2/core/core.hpp"
-#include "opencv2/contrib/contrib.hpp"
-#include "opencv2/highgui/highgui.hpp"
+#ifndef CAMERA_HPP
+#define CAMERA_HPP
 
 #include <ICaptureDevice.hpp>
 
@@ -35,6 +31,8 @@ class Camera final : public ICaptureDevice
 			 * @return Mat opencv matrix
 			 */
 			virtual cv::Mat snapshot();
+
+			explicit operator bool() const;
 };
 
 #endif

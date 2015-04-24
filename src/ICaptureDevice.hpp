@@ -1,5 +1,5 @@
-#ifndef ICAPTUREDEVICE_H
-#define ICAPTUREDEVICE_H
+#ifndef ICAPTUREDEVICE_HPP
+#define ICAPTUREDEVICE_HPP
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/contrib/contrib.hpp>
