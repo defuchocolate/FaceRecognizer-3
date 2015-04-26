@@ -3,8 +3,6 @@
 
 #include <ICaptureDevice.hpp>
 
-#include <thread>
-
 /**
  * @brief Implementation of CaptureDevice interfacer
  */
@@ -13,14 +11,9 @@ class Camera final : public ICaptureDevice
 	bool mIsValid;
 	const unsigned int mDeviceNumber;
 	CvCapture *mCamera;
-	bool mKeepThreadGoing;
-	std::thread mGrabberThread;
-	cv::Mat mBackBufferFrames[10];
 
 	Camera(const Camera&) = delete;
 	const Camera& operator=(const Camera&) = delete;
-
-	void GrabberThread();
 
 	public:
 			/**

@@ -18,8 +18,9 @@ FaceRecognizer::FaceRecognizer(const std::string& aEigenFaceMetaFile) :
 	}
 	catch(cv::Exception& e)
 	{
-		std::cerr << "Instantiation of FaceRecognizer failed!" << std::endl;
-		mIsValid = false;
+		//std::cerr << "Instantiation of FaceRecognizer failed:" << e.code << " " << e.err << std::endl;
+        // when loading meta data failed, this only means that the file does not exist
+		//mIsValid = false;
 	}
 }
 

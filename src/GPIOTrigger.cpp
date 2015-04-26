@@ -43,7 +43,7 @@ bool GPIOTrigger::waitForMs(unsigned int aMsec)
 
 void GPIOTrigger::ListenThread()
 {
-	std::cout << "entering GPIOTrigger main loop" << std::endl;
+	std::cout << "entering " << __PRETTY_FUNCTION__ << " main loop" << std::endl;
 	unsigned char state = 0;
 	while(mKeepThreadGoing)
 	{
@@ -56,7 +56,7 @@ void GPIOTrigger::ListenThread()
 		}
 	}
 
-	std::cout << "leaving GPIOTrigger main loop" << std::endl;
+	std::cout << "leaving " << __PRETTY_FUNCTION__ << " main loop" << std::endl;
 }
 
 GPIOTrigger::operator bool() const

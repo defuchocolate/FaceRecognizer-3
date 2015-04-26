@@ -6,13 +6,15 @@
 #include <FaceWrapper.hpp>
 #include <GPIOTrigger.hpp>
 
-static bool keepGoing = true;
+namespace {
+    bool keepGoing = true;
 
-void signalHandler(int signum)
-{
-	(void)signum;
-	keepGoing = false;
-}
+    void signalHandler(int signum)
+    {
+        (void)signum;
+        keepGoing = false;
+    }
+};
 
 int main(int argc, char** argv)
 {

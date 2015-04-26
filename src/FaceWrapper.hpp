@@ -5,6 +5,8 @@
 #include <FaceDetector.hpp>
 #include <Camera.hpp>
 
+#include <thread>
+
 class FaceWrapper
 {
 	bool mIsValid;
@@ -12,8 +14,15 @@ class FaceWrapper
 	FaceRecognizer mFaceRecognizer;
 	Camera mCamera;
 
+    bool mKeepThreadGoing;
+	std::thread mGrabberThread;
+	cv::Mat mBackBufferFrames[10];
+
+    void GrabberThread();
+
 	public:
 		FaceWrapper(const std::string& aEigenFaceMetaFile, const std::string& aPathToHaarCascade, int aImageWidth, int aImageHeight, int aCameraDeviceNo);
+        ~FaceWrapper();
 
 		void StartProcess();
 
