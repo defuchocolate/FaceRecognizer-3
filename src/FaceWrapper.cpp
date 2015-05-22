@@ -36,7 +36,13 @@ void FaceWrapper::GrabberThread()
 	while (mKeepThreadGoing)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(200));
-		mBackBufferFrames[currIdx] = mCamera.snapshot();
+		//mBackBufferFrames[currIdx] = mCamera.snapshot();
+		cv::Mat test = mCamera.snapshot();
+
+		std::cout << "size: " << test.size().height << std::endl;
+		//namedWindow( "Display window", cv::WINDOW_AUTOSIZE );// Create a window for display.
+		imshow( "Display window", test);                   // Show our image inside it.
+
         std::cout << "currIdx: " << currIdx << std::endl;
 		currIdx = ((currIdx + 1) % 10);
 	}

@@ -6,9 +6,11 @@
 Camera::Camera(unsigned int aDeviceNumber) :
 	mIsValid(true),
 	mDeviceNumber(aDeviceNumber),
-	mCamera(cvCaptureFromCAM(mDeviceNumber))
+	mCamera(mDeviceNumber),
+	currentFrame()
 {
-	if(nullptr == mCamera)
+	cv::waitKey(100);
+	if(!mCamera.isOpened())
 	{
 		std::cerr << "Instantiation of Camera failed!" << std::endl;
 		//mIsValid = false;
@@ -17,12 +19,18 @@ Camera::Camera(unsigned int aDeviceNumber) :
 
 Camera::~Camera()
 {
-	cvReleaseCapture(&mCamera);
+	mCamera.release();
 }
 
 cv::Mat Camera::snapshot()
 {
-    return cvQueryFrame(mCamera);
+	if(mCamera.grab())
+	{
+		cv::waitKey(100);
+		std::cout << "grabbed frame!" << std::endl;
+		mCamera.retrieve(currentFrame);
+	}
+    return currentFrame;
 }
 
 Camera::operator bool() const

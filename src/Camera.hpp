@@ -10,7 +10,9 @@ class Camera final : public ICaptureDevice
 {
 	bool mIsValid;
 	const unsigned int mDeviceNumber;
-	CvCapture *mCamera;
+	//CvCapture *mCamera;
+	cv::VideoCapture mCamera;
+	cv::Mat currentFrame;
 
 	Camera(const Camera&) = delete;
 	const Camera& operator=(const Camera&) = delete;

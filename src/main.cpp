@@ -38,6 +38,8 @@ int main(int argc, char** argv)
 	int imageHeight = atoi(argv[4]);
 	int deviceId = atoi(argv[5]);
 
+	std::cout << "starting with device: " << deviceId << std::endl;
+
 	FaceWrapper faceWrapper(pathToFaceRecognizeMetaFile, pathToHaarCascadeFile, imageWidth, imageHeight, deviceId);
 
 	if (faceWrapper)
