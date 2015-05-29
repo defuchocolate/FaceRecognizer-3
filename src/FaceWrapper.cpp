@@ -8,7 +8,8 @@ FaceWrapper::FaceWrapper(const std::string& aEigenFaceMetaFile, const std::strin
 	mFaceRecognizer(aEigenFaceMetaFile),
 	mCamera(aCameraDeviceNo),
     mKeepThreadGoing(true),
-	mGrabberThread()
+	mGrabberThread(),
+	mSnapshotBufferMutex()
 {
 	if (mFaceDetector && mFaceRecognizer && mCamera)
 	{
@@ -36,13 +37,13 @@ void FaceWrapper::GrabberThread()
 	while (mKeepThreadGoing)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(200));
-		//mBackBufferFrames[currIdx] = mCamera.snapshot();
-		cv::Mat test = mCamera.snapshot();
 
-		std::cout << "size: " << test.size().height << std::endl;
-		//namedWindow( "Display window", cv::WINDOW_AUTOSIZE );// Create a window for display.
-		imshow( "Display window", test);                   // Show our image inside it.
+		// lock mutex for race condition protection:
+		mSnapshotBufferMutex.lock();
+		mBackBufferFrames[currIdx] = mCamera.snapshot();
+		mSnapshotBufferMutex.unlock();
 
+		std::cout << "size: " << mBackBufferFrames[currIdx].size().width << "x" << mBackBufferFrames[currIdx].size().height << std::endl;
         std::cout << "currIdx: " << currIdx << std::endl;
 		currIdx = ((currIdx + 1) % 10);
 	}

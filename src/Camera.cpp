@@ -26,7 +26,6 @@ cv::Mat Camera::snapshot()
 {
 	if(mCamera.grab())
 	{
-		cv::waitKey(100);
 		std::cout << "grabbed frame!" << std::endl;
 		mCamera.retrieve(currentFrame);
 	}

@@ -6,6 +6,7 @@
 #include <Camera.hpp>
 
 #include <thread>
+#include <mutex>
 
 class FaceWrapper
 {
@@ -16,6 +17,7 @@ class FaceWrapper
 
     bool mKeepThreadGoing;
 	std::thread mGrabberThread;
+	std::mutex mSnapshotBufferMutex;
 	cv::Mat mBackBufferFrames[10];
 
     void GrabberThread();
