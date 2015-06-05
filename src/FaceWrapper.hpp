@@ -19,14 +19,16 @@ class FaceWrapper
 	std::thread mGrabberThread;
 	std::mutex mSnapshotBufferMutex;
 	cv::Mat mBackBufferFrames[10];
+	unsigned short mNumOfBackBufferFrames;
 
     void GrabberThread();
 
 	public:
-		FaceWrapper(const std::string& aEigenFaceMetaFile, const std::string& aPathToHaarCascade, int aImageWidth, int aImageHeight, int aCameraDeviceNo);
+		FaceWrapper(const std::string& aEigenFaceMetaFile, const std::string& aPathToHaarCascade, int aImageWidth, int aImageHeight, int aCameraDeviceNo, bool aStartThread);
         ~FaceWrapper();
 
 		void StartProcess();
+		void StartTrainSession();
 
 		explicit operator bool() const;
 };

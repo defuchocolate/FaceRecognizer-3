@@ -23,39 +23,91 @@ int main(int argc, char** argv)
 
 	if (argc < 6)
 	{
-		std::cout << "usage: " << argv[0] << " </path/to/face_recognize_meta.xml> </path/to/haar_cascade> <face image width> <face image height> <device id>" << std::endl;
-		std::cout << "\t </path/to/face_recognize_meta.xml> -- Path to the XML with the face database." << std::endl;
-		std::cout << "\t </path/to/haar_cascade> -- Path to the Haar Cascade for face detection." << std::endl;
-		std::cout << "\t <face image width> -- The width of the trained face images." << std::endl;
-		std::cout << "\t <face image height> -- The height of the trained face images." << std::endl;
-		std::cout << "\t <device id> -- The webcam device id to grab frames from." << std::endl;
+		std::cout << "usage: " << argv[0] << " -r </path/to/face_recognize_meta.xml> -c </path/to/haar_cascade> -w <face image width> -h <face image height> -d <device id>" << std::endl;
+		std::cout << "\t -t -- Start training mode" << std::endl;
+		std::cout << "\t -r </path/to/face_recognize_meta.xml> -- Path to the XML with the face database." << std::endl;
+		std::cout << "\t -c </path/to/haar_cascade> -- Path to the Haar Cascade for face detection." << std::endl;
+		std::cout << "\t -w <face image width> -- The width of the trained face images." << std::endl;
+		std::cout << "\t -h <face image height> -- The height of the trained face images." << std::endl;
+		std::cout << "\t -d <device id> -- The webcam device id to grab frames from." << std::endl;
 		return 1;
 	}
 
-	std::string pathToFaceRecognizeMetaFile = argv[1];
-	std::string pathToHaarCascadeFile = argv[2];
-	int imageWidth = atoi(argv[3]);
-	int imageHeight = atoi(argv[4]);
-	int deviceId = atoi(argv[5]);
+	bool trainMode = false;
+	bool faceRecognizeMetaFileSet = false;
+	bool haarCascadeFileSet = false;
+	bool imageWidthSet = false;
+	bool imageHeightSet = false;
+	bool deviceIdSet = false;
+
+	std::string pathToFaceRecognizeMetaFile;
+	std::string pathToHaarCascadeFile;
+	int imageWidth = 92; // default value
+	int imageHeight = 112; // default value
+	int deviceId = 0;
+
+	char c;
+	while ((c = getopt (argc, argv, "tr:c:w:h:d:")) != -1)
+	{
+		switch (c)
+		{
+			case 't':
+				trainMode = true;
+			break;
+
+			case 'r':
+				pathToFaceRecognizeMetaFile = optarg;
+				faceRecognizeMetaFileSet = true;
+			break;
+
+			case 'c':
+				pathToHaarCascadeFile = optarg;
+				haarCascadeFileSet = true;
+			break;
+
+			case 'w':
+				imageWidth = atoi(optarg);
+				imageWidthSet = true;
+			break;
+
+			case 'h':
+				imageHeight = atoi(optarg);
+				imageHeightSet = true;
+			break;
+
+			case 'd':
+				deviceId = atoi(optarg);
+				deviceIdSet = true;
+			break;
+		}
+	}
 
 	std::cout << "starting with device: " << deviceId << std::endl;
 
-	FaceWrapper faceWrapper(pathToFaceRecognizeMetaFile, pathToHaarCascadeFile, imageWidth, imageHeight, deviceId);
-
+	FaceWrapper faceWrapper(pathToFaceRecognizeMetaFile, pathToHaarCascadeFile, imageWidth, imageHeight, deviceId, !trainMode);
 	if (faceWrapper)
 	{
-		//GPIOTrigger trigger(1); // TODO: choose correct pin
-
-		while(keepGoing)
+		if (trainMode)
 		{
-			/*if (trigger.waitForMs(1000))
+			faceWrapper.StartTrainSession();
+			// make images and train them into database
+		}
+		else
+		{
+			//GPIOTrigger trigger(1); // TODO: choose correct pin
+
+			while(keepGoing)
 			{
-				std::cout << "got trigger!" << std::endl;
+				/*if (trigger.waitForMs(1000))
+				{
+					std::cout << "got trigger!" << std::endl;
 
-				//faceWrapper.StartProcess();
-			}*/
+					//faceWrapper.StartProcess();
+				}*/
 
-			sleep(10); // to be removed when trigger works
+				sleep(10); // to be removed when trigger works
+				faceWrapper.StartProcess();
+			}
 		}
 	}
 	else
