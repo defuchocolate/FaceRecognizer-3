@@ -10,7 +10,6 @@ class Camera final : public ICaptureDevice
 {
 	bool mIsValid;
 	const unsigned int mDeviceNumber;
-	//CvCapture *mCamera;
 	cv::VideoCapture mCamera;
 	cv::Mat currentFrame;
 

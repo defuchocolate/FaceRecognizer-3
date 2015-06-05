@@ -13,7 +13,7 @@ Camera::Camera(unsigned int aDeviceNumber) :
 	if(!mCamera.isOpened())
 	{
 		std::cerr << "Instantiation of Camera failed!" << std::endl;
-		//mIsValid = false;
+		mIsValid = false;
 	}
 }
 
@@ -24,6 +24,14 @@ Camera::~Camera()
 
 cv::Mat Camera::snapshot()
 {
+	// workaround to clear camera backbuffer to get realtime frame:
+	for(int i = 0; i < 5; i++)
+	{
+		mCamera.grab();
+		mCamera.retrieve(currentFrame);
+	}
+
+	// get the frame we really want:
 	if(mCamera.grab())
 	{
 		std::cout << "grabbed frame!" << std::endl;
