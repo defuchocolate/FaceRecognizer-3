@@ -1,5 +1,6 @@
 #include <FaceRecognizer.hpp>
 #include <iostream>
+#include <string>
 
 static int handleError(int, const char*, const char*, const char*, int, void*)
 {
@@ -9,7 +10,8 @@ static int handleError(int, const char*, const char*, const char*, int, void*)
 FaceRecognizer::FaceRecognizer(const std::string& aEigenFaceMetaFile) :
 	mIsValid(true),
 	mEigenFaceMetaFile(aEigenFaceMetaFile),
-	mModel(cv::createEigenFaceRecognizer()) // createLBPHFaceRecognizer(), createFisherFaceRecognizer()
+	mModel(cv::createEigenFaceRecognizer()), // createLBPHFaceRecognizer(), createFisherFaceRecognizer()
+	mLastId(0)
 {
 	cv::redirectError(handleError);
 	try
@@ -33,16 +35,23 @@ FaceRecognizer::operator bool() const
 	return mIsValid;
 }
 
-bool FaceRecognizer::TrainImage(std::vector<cv::Mat>& aImageMatrices, int aImageIdentifier)
+bool FaceRecognizer::Train(const std::vector<cv::Mat>& aImageMatrices, const std::vector<int>& aIdentifiers, const std::vector<std::string>& aNames)
 {
-	if (aImageIdentifier < 0)
+	std::map<int, std::string> labelsInfo;
+
+	if (aIdentifiers.size() != aNames.size())
 	{
 		return false;
 	}
+	unsigned int size = aIdentifiers.size();
 
-	std::vector<int> labels(aImageMatrices.size(), aImageIdentifier);
+	for (unsigned int i = 0; i < size; i++)
+	{
+		labelsInfo.insert(std::pair<int, std::string>(aIdentifiers[i], aNames[i]));
+	}
 
-	mModel->train(aImageMatrices, labels);
+	mModel->train(aImageMatrices, aIdentifiers);
+	mModel->setLabelsInfo(labelsInfo);
 
 	// save the updated model:
 	try
@@ -60,7 +69,7 @@ bool FaceRecognizer::TrainImage(std::vector<cv::Mat>& aImageMatrices, int aImage
 int FaceRecognizer::FindIdentifierForFace(cv::Mat& aImage)
 {
 	int predictLabel = -1;
-	double confidence = 0.0;
+	double confidence = 0.5;
 	mModel->predict(aImage, predictLabel, confidence);
 
 	if (predictLabel >= 0)
@@ -70,7 +79,11 @@ int FaceRecognizer::FindIdentifierForFace(cv::Mat& aImage)
 			return predictLabel;
 		}
 	}
+
 	return -1;
 }
 
-
+std::string FaceRecognizer::GetNameOfId(int aIdentifier)
+{
+	return mModel->getLabelInfo(aIdentifier);
+}
