@@ -113,7 +113,9 @@ int main(int argc, char** argv)
 					//faceWrapper.StartProcess();
 				}*/
 
-				sleep(10); // to be removed when trigger works
+				//sleep(10); // to be removed when trigger works
+				std::cout << "press any key to start detection" << std::endl;
+				std::cin.get(c);
 				faceWrapper.StartProcess();
 			}
 		}

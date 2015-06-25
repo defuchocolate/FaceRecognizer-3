@@ -52,7 +52,7 @@ void FaceWrapper::GrabberThread()
 	unsigned int currIdx = 0;
 
 #if defined(DEBUG)
-	cv::namedWindow("Snapshot", cv::WINDOW_AUTOSIZE );// Create a window for display.
+//	cv::namedWindow("Snapshot", cv::WINDOW_AUTOSIZE );// Create a window for display.
 #endif
 
 	while (mKeepThreadGoing)
@@ -69,8 +69,8 @@ void FaceWrapper::GrabberThread()
 		mSnapshotBufferMutex.unlock();
 
 #if defined(DEBUG)
-		cv::imshow("Snapshot", mBackBufferFrames.back());
-		cv::waitKey(200);
+//		cv::imshow("Snapshot", mBackBufferFrames.back());
+//		cv::waitKey(200);
 #endif
 
 		//std::cout << "size: " << mBackBufferFrames[currIdx].size().width << "x" << mBackBufferFrames[currIdx].size().height << std::endl;
@@ -81,7 +81,7 @@ void FaceWrapper::GrabberThread()
 	}
 
 #if defined(DEBUG)
-	cv::destroyWindow("Snapshot");
+//	cv::destroyWindow("Snapshot");
 #endif
 
 	std::cout << "leaving " << __PRETTY_FUNCTION__ << " main loop" << std::endl;
