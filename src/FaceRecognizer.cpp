@@ -10,7 +10,7 @@ static int handleError(int, const char*, const char*, const char*, int, void*)
 FaceRecognizer::FaceRecognizer(const std::string& aEigenFaceMetaFile) :
 	mIsValid(true),
 	mEigenFaceMetaFile(aEigenFaceMetaFile),
-	mModel(cv::createEigenFaceRecognizer()), // createLBPHFaceRecognizer(), createFisherFaceRecognizer()
+	mModel(cv::createEigenFaceRecognizer(10, 1600.0)), // createLBPHFaceRecognizer(), createFisherFaceRecognizer()
 	mLastId(0)
 {
 	cv::redirectError(handleError);
@@ -69,8 +69,10 @@ bool FaceRecognizer::Train(const std::vector<cv::Mat>& aImageMatrices, const std
 int FaceRecognizer::FindIdentifierForFace(cv::Mat& aImage)
 {
 	int predictLabel = -1;
-	double confidence = 0.5;
+	double confidence = 1;
 	mModel->predict(aImage, predictLabel, confidence);
+
+	std::cout << "confidence: " << confidence << std::endl;
 
 	if (predictLabel >= 0)
 	{

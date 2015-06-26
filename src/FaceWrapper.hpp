@@ -4,6 +4,7 @@
 #include <FaceRecognizer.hpp>
 #include <FaceDetector.hpp>
 #include <Camera.hpp>
+#include <MailService.hpp>
 
 #include <thread>
 #include <mutex>
@@ -16,6 +17,7 @@ class FaceWrapper
 	FaceRecognizer mFaceRecognizer;
 	std::string mPathToImageDirectory;
 	Camera mCamera;
+	MailService mMailService;
 
     bool mKeepThreadGoing;
 	std::thread mGrabberThread;

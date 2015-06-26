@@ -1,0 +1,4 @@
+Needed for building:
+
+dev-libs/poco
+dev-libs/opencv

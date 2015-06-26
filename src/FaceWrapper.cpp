@@ -20,8 +20,14 @@ FaceWrapper::FaceWrapper(const std::string& aEigenFaceMetaFile, const std::strin
 	mGrabberThread(),
 	mSnapshotBufferMutex(),
 	mBackBufferFrames(),
-	mNumOfBackBufferFrames(0)
+	mNumOfBackBufferFrames(0),
+	mMailService("FaceRecognizer", "facerecognizer@mboeffel.de", "facerecognizer@mboeffel.de", "GesichtsGulasch69", "cp89.sp-server.net", 587)
 {
+	mMailService.SetRecipient("mboeffel@gmail.com", "Matthias Boeffel");
+	mMailService.SetRecipient("markusnebel@gmail.com", "Markus Nebel");
+
+	mMailService.SendMail("Matthias Boeffel stinkt!");
+
 	if (mFaceDetector && mFaceRecognizer && mCamera)
 	{
 		mIsValid = true;
@@ -52,7 +58,7 @@ void FaceWrapper::GrabberThread()
 	unsigned int currIdx = 0;
 
 #if defined(DEBUG)
-//	cv::namedWindow("Snapshot", cv::WINDOW_AUTOSIZE );// Create a window for display.
+	cv::namedWindow("Snapshot", cv::WINDOW_AUTOSIZE );// Create a window for display.
 #endif
 
 	while (mKeepThreadGoing)
@@ -69,8 +75,8 @@ void FaceWrapper::GrabberThread()
 		mSnapshotBufferMutex.unlock();
 
 #if defined(DEBUG)
-//		cv::imshow("Snapshot", mBackBufferFrames.back());
-//		cv::waitKey(200);
+		cv::imshow("Snapshot", mBackBufferFrames.back());
+		cv::waitKey(200);
 #endif
 
 		//std::cout << "size: " << mBackBufferFrames[currIdx].size().width << "x" << mBackBufferFrames[currIdx].size().height << std::endl;
@@ -81,7 +87,7 @@ void FaceWrapper::GrabberThread()
 	}
 
 #if defined(DEBUG)
-//	cv::destroyWindow("Snapshot");
+	cv::destroyWindow("Snapshot");
 #endif
 
 	std::cout << "leaving " << __PRETTY_FUNCTION__ << " main loop" << std::endl;
@@ -107,10 +113,10 @@ void FaceWrapper::StartProcess()
 				std::cout << "detect " << detectedFaces.size() << " faces on picture" << std::endl;
 				for (auto face : detectedFaces)
 				{
-					cv::namedWindow("DetectedFace", cv::WINDOW_AUTOSIZE );// Create a window for display.
-					cv::imshow("DetectedFace", face);
-					cv::waitKey(200);
-					cv::destroyWindow("DetectedFace");
+					//cv::namedWindow("DetectedFace", cv::WINDOW_AUTOSIZE );// Create a window for display.
+					//cv::imshow("DetectedFace", face);
+					//cv::waitKey(200);
+					//cv::destroyWindow("DetectedFace");
 
 					int faceIdentifier = mFaceRecognizer.FindIdentifierForFace(face);
 					const std::string faceName = mFaceRecognizer.GetNameOfId(faceIdentifier);
