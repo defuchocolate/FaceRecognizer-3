@@ -26,8 +26,6 @@ FaceWrapper::FaceWrapper(const std::string& aEigenFaceMetaFile, const std::strin
 	mMailService.SetRecipient("mboeffel@gmail.com", "Matthias Boeffel");
 	mMailService.SetRecipient("markusnebel@gmail.com", "Markus Nebel");
 
-	mMailService.SendMail("Matthias Boeffel stinkt!");
-
 	if (mFaceDetector && mFaceRecognizer && mCamera)
 	{
 		mIsValid = true;
@@ -55,7 +53,6 @@ FaceWrapper::operator bool() const
 void FaceWrapper::GrabberThread()
 {
 	std::cout << "entering " << __PRETTY_FUNCTION__ << " main loop" << std::endl;
-	unsigned int currIdx = 0;
 
 #if defined(DEBUG)
 	cv::namedWindow("Snapshot", cv::WINDOW_AUTOSIZE );// Create a window for display.
@@ -65,7 +62,6 @@ void FaceWrapper::GrabberThread()
 	{
 		// lock mutex for race condition protection:
 		mSnapshotBufferMutex.lock();
-		//mBackBufferFrames[currIdx] = mCamera.snapshot();
 		mBackBufferFrames.push(mCamera.snapshot());
 
 		if (mBackBufferFrames.size() == SIZE_OF_BACKBUFFER)
@@ -79,11 +75,7 @@ void FaceWrapper::GrabberThread()
 		cv::waitKey(200);
 #endif
 
-		//std::cout << "size: " << mBackBufferFrames[currIdx].size().width << "x" << mBackBufferFrames[currIdx].size().height << std::endl;
-        //std::cout << "currIdx: " << currIdx << std::endl;
-		currIdx = ((currIdx + 1) % SIZE_OF_BACKBUFFER);
-
-		std::this_thread::sleep_for(std::chrono::milliseconds(400));
+		std::this_thread::sleep_for(std::chrono::milliseconds(500));
 	}
 
 #if defined(DEBUG)
@@ -99,6 +91,7 @@ void FaceWrapper::GrabberThread()
 void FaceWrapper::StartProcess()
 {
 	std::vector<cv::Mat> detectedFaces;
+	std::vector<std::string> detectedNames;
 
 	// lock snapshot backbuffer
 	mSnapshotBufferMutex.lock();
@@ -122,6 +115,7 @@ void FaceWrapper::StartProcess()
 					const std::string faceName = mFaceRecognizer.GetNameOfId(faceIdentifier);
 					if (0 <= faceIdentifier)
 					{
+						detectedNames.push_back(faceName);
 						std::cout << "found person: " << faceName << "(" << faceIdentifier << ")" << std::endl;
 					}
 					else
@@ -140,6 +134,19 @@ void FaceWrapper::StartProcess()
 		}
 	}
 	mSnapshotBufferMutex.unlock();
+
+	if (detectedNames.size() > 0)
+	{
+		std::stringstream sstream;
+		sstream << "Hallo\r\n\r\n";
+		for (std::string& name : detectedNames)
+		{
+			sstream << name << "\r\n";
+		}
+		sstream << "\r\nhat geklingelt!\r\n";
+		mMailService.SendMail(sstream.str());
+	}
+
 }
 
 int FaceWrapper::readCSV(const std::string& filename, std::vector<cv::Mat>& images, std::vector<int>& labels, std::vector<std::string>& names)

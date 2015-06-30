@@ -34,7 +34,6 @@ cv::Mat Camera::snapshot()
 	// get the frame we really want:
 	if(mCamera.grab())
 	{
-		std::cout << "grabbed frame!" << std::endl;
 		mCamera.retrieve(currentFrame);
 	}
     return currentFrame;

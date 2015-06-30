@@ -4,7 +4,12 @@
 #include <signal.h>
 
 #include <FaceWrapper.hpp>
+
+#if defined(RASPBERRY)
 #include <GPIOTrigger.hpp>
+#else
+#include <KeyboardTrigger.hpp>
+#endif
 
 namespace {
     bool keepGoing = true;
@@ -90,11 +95,11 @@ int main(int argc, char** argv)
 		}
 	}
 
-	std::cout << "starting with device: " << deviceId << std::endl;
-
 	FaceWrapper faceWrapper(pathToFaceRecognizeMetaFile, pathToHaarCascadeFile, pathToImageDirectory, imageWidth, imageHeight, deviceId, !trainMode);
 	if (faceWrapper)
 	{
+		std::cout << "starting with device: " << deviceId << std::endl;
+
 		if (trainMode)
 		{
 			faceWrapper.StartTrainSession();
@@ -102,21 +107,22 @@ int main(int argc, char** argv)
 		}
 		else
 		{
-			//GPIOTrigger trigger(1); // TODO: choose correct pin
+			#if defined(RASPBERRY)
+			GPIOTrigger trigger(1); // TODO: choose correct pin
+			#else
+			KeyboardTrigger trigger;
+			#endif
 
 			while(keepGoing)
 			{
-				/*if (trigger.waitForMs(1000))
+				if (trigger.waitForMs(1000))
 				{
-					std::cout << "got trigger!" << std::endl;
-
-					//faceWrapper.StartProcess();
-				}*/
-
-				//sleep(10); // to be removed when trigger works
-				std::cout << "press any key to start detection" << std::endl;
-				std::cin.get(c);
-				faceWrapper.StartProcess();
+					if(keepGoing) // double check exit condition
+					{
+						std::cout << "got trigger event!" << std::endl;
+						faceWrapper.StartProcess();
+					}
+				}
 			}
 		}
 	}

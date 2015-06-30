@@ -23,7 +23,7 @@ GPIOTrigger::~GPIOTrigger()
 
 void GPIOTrigger::wait()
 {
-	// loop
+	// not implemented yet
 }
 
 bool GPIOTrigger::waitForMs(unsigned int aMsec)
