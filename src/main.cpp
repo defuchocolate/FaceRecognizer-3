@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <signal.h>
 
+#include <thirdparty/minIni/minIni.h>
 #include <FaceWrapper.hpp>
 
 #if defined(RASPBERRY)
@@ -47,13 +48,6 @@ int main(int argc, char** argv)
 	bool imageHeightSet = false;
 	bool deviceIdSet = false;
 
-	std::string pathToFaceRecognizeMetaFile;
-	std::string pathToHaarCascadeFile;
-	std::string pathToImageDirectory;
-	int imageWidth = 92; // default value
-	int imageHeight = 112; // default value
-	int deviceId = 0;
-
 	char c;
 	while ((c = getopt (argc, argv, "tr:c:w:h:d:i:")) != -1)
 	{
@@ -63,7 +57,7 @@ int main(int argc, char** argv)
 				trainMode = true;
 			break;
 
-			case 'r':
+			/*case 'r':
 				pathToFaceRecognizeMetaFile = optarg;
 				faceRecognizeMetaFileSet = true;
 			break;
@@ -91,9 +85,26 @@ int main(int argc, char** argv)
 			case 'i':
 				pathToImageDirectory = optarg;
 				imageDirectorySet = true;
-			break;
+			break;*/
 		}
 	}
+
+	minIni iniReader("config/main.ini");
+	int deviceId = iniReader.geti("general", "devicenumber", 0);
+	std::string pathToHaarCascadeFile = iniReader.gets("general", "haardcascade", "");
+	std::string pathToFaceRecognizeMetaFile = iniReader.gets("general", "eigenface", "");
+
+	std::string pathToImageDirectory = iniReader.gets("images", "trainingpath", "");
+	int imageWidth = iniReader.geti("images", "width", 0);
+	int imageHeight = iniReader.geti("images", "height", 0);
+
+	bool emailEnabled = iniReader.geti("email", "enable", 0);
+	std::string emailSender = iniReader.gets("email", "sendername", "");
+	std::string emailSenderAddress = iniReader.gets("email", "senderaddr", "");
+	std::string emailSMTPServer = iniReader.gets("email", "smtpserver", "");
+	unsigned short emailSMTPPort = iniReader.geti("email", "smtpport", 0);
+	std::string emailSMTPUsername = iniReader.gets("email", "smtpusername", "");
+	std::string emailSMTPPassword = iniReader.gets("email", "smtppassword", "");
 
 	FaceWrapper faceWrapper(pathToFaceRecognizeMetaFile, pathToHaarCascadeFile, pathToImageDirectory, imageWidth, imageHeight, deviceId, !trainMode);
 	if (faceWrapper)
