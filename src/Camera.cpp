@@ -12,7 +12,7 @@ Camera::Camera(unsigned int aDeviceNumber) :
 	cv::waitKey(100);
 	if(!mCamera.isOpened())
 	{
-		std::cerr << "Instantiation of Camera failed!" << std::endl;
+		std::cerr << "Can not open camera device!" << std::endl;
 		mIsValid = false;
 	}
 }

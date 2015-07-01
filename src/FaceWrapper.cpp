@@ -10,27 +10,30 @@ namespace
 	const unsigned short SIZE_OF_BACKBUFFER = 10;
 }
 
-FaceWrapper::FaceWrapper(const std::string& aEigenFaceMetaFile, const std::string& aPathToHaarCascade, const std::string& aPathToImageDirectory, int aImageWidth, int aImageHeight, int aCameraDeviceNo, bool aStartThread) :
+FaceWrapper::FaceWrapper(const std::string& aEigenFaceMetaFile, const std::string& aPathToHaarCascade, const std::string& aPathToImageDirectory, int aImageWidth, int aImageHeight, int aCameraDeviceNo, bool aStartThread, const std::string& aEmailSenderName, const std::string& aEmailSenderAddress, const std::string& aEmailSMTPServer, const unsigned short aEmailSMTPPort, const std::string& aEmailSMTPUsername, const std::string& aEmailSMTPPassword, const std::vector<std::string>& aEmailReceiverAddresses) :
 	mIsValid(false),
 	mFaceDetector(aPathToHaarCascade, aImageWidth, aImageHeight),
 	mFaceRecognizer(aEigenFaceMetaFile),
 	mPathToImageDirectory(aPathToImageDirectory),
 	mCamera(aCameraDeviceNo),
-    mKeepThreadGoing(aStartThread),
+    mKeepThreadGoing(false),
 	mGrabberThread(),
 	mSnapshotBufferMutex(),
 	mBackBufferFrames(),
 	mNumOfBackBufferFrames(0),
-	mMailService("FaceRecognizer", "facerecognizer@mboeffel.de", "facerecognizer@mboeffel.de", "GesichtsGulasch69", "cp89.sp-server.net", 587)
+	mMailService(aEmailSenderName, aEmailSenderAddress, aEmailSMTPUsername, aEmailSMTPPassword, aEmailSMTPServer, aEmailSMTPPort)
 {
-	mMailService.SetRecipient("mboeffel@gmail.com", "Matthias Boeffel");
-	mMailService.SetRecipient("markusnebel@gmail.com", "Markus Nebel");
+    for (const std::string& address : aEmailReceiverAddresses)
+    {
+        mMailService.SetRecipient(address);
+    }
 
 	if (mFaceDetector && mFaceRecognizer && mCamera)
 	{
 		mIsValid = true;
 		if (aStartThread)
 		{
+            mKeepThreadGoing = true;
 			mGrabberThread = std::thread(&FaceWrapper::GrabberThread, this);
 		}
 	}

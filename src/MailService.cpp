@@ -24,9 +24,9 @@ MailService::~MailService()
 
 }
 
-void MailService::SetRecipient(const std::string& aRecipientAddress, const std::string& aRecipientFullName)
+void MailService::SetRecipient(const std::string& aRecipientAddress)
 {
-	mPocoMail.addRecipient(Poco::Net::MailRecipient(Poco::Net::MailRecipient::PRIMARY_RECIPIENT, aRecipientAddress, aRecipientFullName));
+	mPocoMail.addRecipient(Poco::Net::MailRecipient(Poco::Net::MailRecipient::PRIMARY_RECIPIENT, aRecipientAddress));
 }
 
 bool MailService::SendMail(const std::string& aText)

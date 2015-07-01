@@ -22,7 +22,6 @@ class FaceWrapper
     bool mKeepThreadGoing;
 	std::thread mGrabberThread;
 	std::mutex mSnapshotBufferMutex;
-	//cv::Mat mBackBufferFrames[10];
 	std::queue<cv::Mat> mBackBufferFrames;
 	unsigned short mNumOfBackBufferFrames;
 
@@ -31,7 +30,7 @@ class FaceWrapper
     void writeCSV(const std::string& aPathToCSV, const std::string& aPathToImage, int aLabel, const std::string& aName, bool aDelete = false);
 
 	public:
-		FaceWrapper(const std::string& aEigenFaceMetaFile, const std::string& aPathToHaarCascade, const std::string& aPathToImageDirectory, int aImageWidth, int aImageHeight, int aCameraDeviceNo, bool aStartThread);
+		FaceWrapper(const std::string& aEigenFaceMetaFile, const std::string& aPathToHaarCascade, const std::string& aPathToImageDirectory, int aImageWidth, int aImageHeight, int aCameraDeviceNo, bool aStartThread, const std::string& aEmailSenderName, const std::string& aEmailSenderAddress, const std::string& aEmailSMTPServer, const unsigned short aEmailSMTPPort, const std::string& aEmailSMTPUsername, const std::string& aEmailSMTPPassword, const std::vector<std::string>& aEmailReceiverAddresses);
         ~FaceWrapper();
 
 		void StartProcess();

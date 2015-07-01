@@ -18,7 +18,7 @@ class MailService
 		MailService(const std::string& aSenderFullName, const std::string& aSenderAddress, const std::string& aUsername, const std::string& aPassword, const std::string& aServerAddress, const short aPort);
         ~MailService();
 
-        void SetRecipient(const std::string& aRecipientAddress, const std::string& aRecipientFullName);
+        void SetRecipient(const std::string& aRecipientAddress);
 		bool SendMail(const std::string& aText);
 
 		explicit operator bool() const;
