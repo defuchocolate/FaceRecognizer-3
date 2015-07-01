@@ -59,7 +59,6 @@ int main(int argc, char** argv)
 	bool imageDirectorySet = false;
 	bool imageWidthSet = false;
 	bool imageHeightSet = false;
-	bool deviceIdSet = false;
 
     bool pathToConfigSet = false;
     std::string pathToConfig;
@@ -83,14 +82,37 @@ int main(int argc, char** argv)
     if (pathToConfigSet)
     {
         minIni iniReader(pathToConfig);
+        // [gerneral]
         int deviceId = iniReader.geti("general", "devicenumber", 0);
         std::string pathToHaarCascadeFile = iniReader.gets("general", "haardcascade", "");
+        if (pathToHaarCascadeFile.size() > 0)
+        {
+            haarCascadeFileSet = true;
+        }
         std::string pathToFaceRecognizeMetaFile = iniReader.gets("general", "eigenface", "");
+        if (pathToFaceRecognizeMetaFile.size() > 0)
+        {
+            faceRecognizeMetaFileSet = true;
+        }
 
+        // [images]
         std::string pathToImageDirectory = iniReader.gets("images", "trainingpath", "");
+        if (pathToImageDirectory.size() > 0)
+        {
+            imageDirectorySet = true;
+        }
         int imageWidth = iniReader.geti("images", "width", 0);
+        if (imageWidth > 0)
+        {
+            imageWidthSet = true;
+        }
         int imageHeight = iniReader.geti("images", "height", 0);
+        if (imageHeight > 0)
+        {
+            imageHeightSet = true;
+        }
 
+        // [email]
         std::string emailSenderName = iniReader.gets("email", "sendername", "");
         std::string emailSenderAddress = iniReader.gets("email", "senderaddr", "");
         std::string emailSMTPServer = iniReader.gets("email", "smtpserver", "");
@@ -103,6 +125,12 @@ int main(int argc, char** argv)
         if (!separateCommaSeparatedString(receiverAddresses, emailReceiverAddresses))
         {
             std::cerr << "failed to separate mail addresses: " << emailReceiverAddresses << std::endl;
+            return 1;
+        }
+
+        if (!haarCascadeFileSet || !faceRecognizeMetaFileSet || !imageDirectorySet || !imageWidthSet || !imageHeightSet)
+        {
+            std::cerr << "configuration is incomplete!" << std::endl;
             return 1;
         }
 
