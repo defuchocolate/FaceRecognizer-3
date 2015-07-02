@@ -4,7 +4,7 @@
 #include <ICaptureDevice.hpp>
 
 /**
- * @brief Implementation of CaptureDevice interfacer
+ * @brief Implementation of CaptureDevice interface
  */
 class Camera final : public ICaptureDevice
 {
@@ -27,7 +27,7 @@ class Camera final : public ICaptureDevice
 			virtual ~Camera();
 
 			/**
-			 * @brief get opencv matrix from camera snapshot
+			 * @brief get frame as opencv matrix from camera
 			 *
 			 * @return Mat opencv matrix
 			 */

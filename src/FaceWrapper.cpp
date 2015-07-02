@@ -169,7 +169,7 @@ void FaceWrapper::StartProcess()
 
 }
 
-int FaceWrapper::readCSV(const std::string& filename, std::vector<cv::Mat>& images, std::vector<int>& labels, std::vector<std::string>& names)
+int FaceWrapper::readCSV(const std::string& aFilename, std::vector<cv::Mat>& aImages, std::vector<int>& aLabels, std::vector<std::string>& aNames)
 {
     std::ifstream file(filename.c_str(), std::ifstream::in);
     int latestId = 0;
