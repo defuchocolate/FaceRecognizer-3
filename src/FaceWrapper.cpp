@@ -10,6 +10,24 @@ namespace
 	const unsigned short SIZE_OF_BACKBUFFER = 10;
 }
 
+static cv::Mat norm_0_255(cv::InputArray _src) {
+    cv::Mat src = _src.getMat();
+    // Create and return normalized image:
+    cv::Mat dst;
+    switch(src.channels()) {
+    case 1:
+        cv::normalize(_src, dst, 0, 255, cv::NORM_MINMAX, CV_8UC1);
+        break;
+    case 3:
+        cv::normalize(_src, dst, 0, 255, cv::NORM_MINMAX, CV_8UC3);
+        break;
+    default:
+        src.copyTo(dst);
+        break;
+    }
+    return dst;
+}
+
 FaceWrapper::FaceWrapper(const std::string& aEigenFaceMetaFile, const std::string& aPathToHaarCascade, const std::string& aPathToImageDirectory, int aImageWidth, int aImageHeight, int aCameraDeviceNo, bool aStartThread, const std::string& aEmailSenderName, const std::string& aEmailSenderAddress, const std::string& aEmailSMTPServer, const unsigned short aEmailSMTPPort, const std::string& aEmailSMTPUsername, const std::string& aEmailSMTPPassword, const std::vector<std::string>& aEmailReceiverAddresses) :
 	mIsValid(false),
 	mFaceDetector(aPathToHaarCascade, aImageWidth, aImageHeight),
@@ -20,7 +38,6 @@ FaceWrapper::FaceWrapper(const std::string& aEigenFaceMetaFile, const std::strin
 	mGrabberThread(),
 	mSnapshotBufferMutex(),
 	mBackBufferFrames(),
-	mNumOfBackBufferFrames(0),
 	mMailService(aEmailSenderName, aEmailSenderAddress, aEmailSMTPUsername, aEmailSMTPPassword, aEmailSMTPServer, aEmailSMTPPort)
 {
     for (const std::string& address : aEmailReceiverAddresses)
@@ -114,7 +131,7 @@ void FaceWrapper::StartProcess()
 					//cv::waitKey(200);
 					//cv::destroyWindow("DetectedFace");
 
-					int faceIdentifier = mFaceRecognizer.FindIdentifierForFace(face);
+					int faceIdentifier = mFaceRecognizer.FindIdentifierForFace(norm_0_255(face));
 					const std::string faceName = mFaceRecognizer.GetNameOfId(faceIdentifier);
 					if (0 <= faceIdentifier)
 					{
@@ -251,11 +268,11 @@ void FaceWrapper::StartTrainSession()
 					if (c == 'Y' || c == 'y')
 					{
 						// write data on disk:
-						imwrite(pathToCurrImage, face);
+						imwrite(pathToCurrImage, norm_0_255(face));
 						writeCSV(pathToCSV, pathToCurrImage, currId, currName);
 
 						// store in memory for subsequent training:
-						images.push_back(face);
+						images.push_back(norm_0_255(face));
 						labels.push_back(currId);
 						names.push_back(currName);
 

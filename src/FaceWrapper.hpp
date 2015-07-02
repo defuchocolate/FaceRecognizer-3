@@ -17,13 +17,13 @@ class FaceWrapper
 	FaceRecognizer mFaceRecognizer;
 	std::string mPathToImageDirectory;
 	Camera mCamera;
-	MailService mMailService;
 
     bool mKeepThreadGoing;
 	std::thread mGrabberThread;
 	std::mutex mSnapshotBufferMutex;
 	std::queue<cv::Mat> mBackBufferFrames;
-	unsigned short mNumOfBackBufferFrames;
+
+	MailService mMailService;
 
     void GrabberThread();
     int readCSV(const std::string& filename, std::vector<cv::Mat>& images, std::vector<int>& labels, std::vector<std::string>& names);

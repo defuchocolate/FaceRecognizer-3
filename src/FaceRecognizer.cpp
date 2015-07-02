@@ -10,7 +10,7 @@ static int handleError(int, const char*, const char*, const char*, int, void*)
 FaceRecognizer::FaceRecognizer(const std::string& aEigenFaceMetaFile) :
 	mIsValid(true),
 	mEigenFaceMetaFile(aEigenFaceMetaFile),
-	mModel(cv::createEigenFaceRecognizer(10, 1600.0)), // createLBPHFaceRecognizer(), createFisherFaceRecognizer()
+	mModel(cv::createEigenFaceRecognizer(50, 1600.0)), // createLBPHFaceRecognizer(), createFisherFaceRecognizer()
 	mLastId(0)
 {
 	cv::redirectError(handleError);
