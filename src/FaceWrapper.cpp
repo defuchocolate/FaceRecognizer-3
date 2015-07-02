@@ -131,7 +131,8 @@ void FaceWrapper::StartProcess()
 					//cv::waitKey(200);
 					//cv::destroyWindow("DetectedFace");
 
-					int faceIdentifier = mFaceRecognizer.FindIdentifierForFace(norm_0_255(face));
+                    cv::Mat normalizedFace = norm_0_255(face);
+					int faceIdentifier = mFaceRecognizer.FindIdentifierForFace(normalizedFace);
 					const std::string faceName = mFaceRecognizer.GetNameOfId(faceIdentifier);
 					if (0 <= faceIdentifier)
 					{
@@ -171,7 +172,7 @@ void FaceWrapper::StartProcess()
 
 int FaceWrapper::readCSV(const std::string& aFilename, std::vector<cv::Mat>& aImages, std::vector<int>& aLabels, std::vector<std::string>& aNames)
 {
-    std::ifstream file(filename.c_str(), std::ifstream::in);
+    std::ifstream file(aFilename.c_str(), std::ifstream::in);
     int latestId = 0;
 
     if (!file)
@@ -194,9 +195,9 @@ int FaceWrapper::readCSV(const std::string& aFilename, std::vector<cv::Mat>& aIm
 				latestId = id;
 			}
 
-            images.push_back(cv::imread(path, 0));
-            labels.push_back(id);
-            names.push_back(name);
+            aImages.push_back(cv::imread(path, 0));
+            aLabels.push_back(id);
+            aNames.push_back(name);
         }
     }
 

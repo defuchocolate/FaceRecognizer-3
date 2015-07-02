@@ -79,6 +79,7 @@ int main(int argc, char** argv)
 		}
 	}
 
+    // parse configuration file
     if (pathToConfigSet)
     {
         minIni iniReader(pathToConfig);

@@ -7,7 +7,7 @@
 #include <thread>
 
 /**
- * @brief Implementation of Trigger interfacer
+ * @brief Implementation of Trigger interface
  */
 class KeyboardTrigger final : public ITrigger
 {
